@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en" data-palette="cocoa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[Case study title] — Kim Inouye</title>
+<!--
+  ============================================================
+  CASE STUDY TEMPLATE — how to use
+  ------------------------------------------------------------
+  1. Duplicate this file into the case-studies/ folder and rename it
+     with a short slug, e.g. case-studies/paypal-focus-time.html
+  2. Fill in every [bracketed] placeholder. Delete sections you
+     don't need; duplicate .cs-section / .cs-figure blocks as needed.
+  3. Drop screenshots into the .cs-figure placeholders: replace the
+     <div class="ph"> with <img src="../images/your-shot.png" alt="...">
+  4. Add a row to the "Selected work" list on the main site:
+       <a class="work-item" href="case-studies/your-slug.html"> ... </a>
+  5. On deploy the site root becomes index.html — update the two
+     "back to work" links below from the filename to  /#work
+  ============================================================
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..600&family=DM+Sans:opsz,wght@9..40,300..600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root,
+html[data-palette="cocoa"] {
+  --bg:        oklch(0.155 0.011 60);
+  --bg-rise:   oklch(0.205 0.010 60);
+  --text:      oklch(0.945 0.020 80);
+  --secondary: oklch(0.660 0.012 70);
+  --tertiary:  oklch(0.460 0.012 65);
+  --border:    oklch(0.300 0.010 65);
+  --hairline:  oklch(0.260 0.009 65);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: "DM Sans", system-ui, sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.65;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+h1, h2, h3, h4 {
+  font-family: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.012em;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+p { text-wrap: pretty; }
+
+/* ---- top nav ---- */
+nav.topnav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 50;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem clamp(1.5rem, 4vw, 3.5rem);
+  background: color-mix(in oklab, var(--bg) 86%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--hairline);
+}
+nav.topnav a {
+  font-family: "DM Mono", monospace;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  color: var(--text);
+  text-decoration: none;
+}
+nav.topnav .mark { letter-spacing: 0.18em; }
+nav.topnav .back { color: var(--secondary); text-transform: uppercase; transition: color 200ms ease; }
+nav.topnav .back:hover { color: var(--text); }
+nav.topnav .back span { font-family: "DM Mono", monospace; margin-right: 0.5rem; }
+
+.shell {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 0 clamp(1.5rem, 4vw, 3.5rem);
+}
+
+/* ---- case header ---- */
+.cs-head { padding: clamp(8rem, 14vw, 11rem) 0 clamp(2.5rem, 5vw, 4rem); }
+.cs-kicker {
+  font-family: "DM Mono", monospace;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-bottom: 1.75rem;
+}
+.cs-kicker::before { content: ""; width: 28px; height: 1px; background: var(--border); }
+.cs-title {
+  font-size: clamp(2.5rem, 5.5vw, 4.25rem);
+  line-height: 1.04;
+  letter-spacing: -0.022em;
+  margin-bottom: 1.5rem;
+}
+.cs-dek {
+  font-size: clamp(1.2rem, 1.6vw, 1.4rem);
+  line-height: 1.6;
+  color: var(--secondary);
+  max-width: 50ch;
+}
+.cs-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.5rem 3.5rem;
+  margin-top: clamp(2.5rem, 4vw, 3.5rem);
+  padding-top: 2.25rem;
+  border-top: 1px solid var(--hairline);
+}
+.cs-meta div { display: flex; flex-direction: column; gap: 0.4rem; }
+.cs-meta .k {
+  font-family: "DM Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--tertiary);
+}
+.cs-meta .v { font-size: 1.0625rem; color: var(--text); }
+
+/* ---- image placeholder ---- */
+.cs-figure { margin: clamp(2.5rem, 5vw, 4rem) 0; }
+.ph {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--hairline);
+  background-color: var(--bg-rise);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent, transparent 9px,
+    color-mix(in oklab, var(--hairline) 60%, transparent) 9px,
+    color-mix(in oklab, var(--hairline) 60%, transparent) 10px
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ph span {
+  font-family: "DM Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--secondary);
+  background: var(--bg);
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--hairline);
+}
+.cs-figure img { width: 100%; height: auto; display: block; border: 1px solid var(--hairline); }
+.cs-caption {
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--tertiary);
+  margin-top: 0.85rem;
+}
+
+/* ---- body sections ---- */
+.cs-section { padding: clamp(2rem, 3.5vw, 3rem) 0; border-top: 1px solid var(--hairline); }
+.cs-section:first-of-type { border-top: none; }
+.cs-section h2 {
+  font-size: clamp(1.6rem, 2.4vw, 2.1rem);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  margin-bottom: 1.5rem;
+}
+.cs-section p { font-size: 1.125rem; line-height: 1.75; margin-bottom: 1.25rem; }
+.cs-section p:last-child { margin-bottom: 0; }
+.cs-section ul { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; margin: 0.5rem 0; }
+.cs-section li {
+  position: relative;
+  padding-left: 1.4rem;
+  font-size: 1.125rem;
+  line-height: 1.7;
+}
+.cs-section li::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0.7em;
+  width: 11px; height: 1px;
+  background: var(--tertiary);
+}
+
+/* ---- outcome metrics ---- */
+.cs-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--hairline);
+  border: 1px solid var(--hairline);
+  margin-top: 0.5rem;
+}
+.cs-metric { background: var(--bg); padding: 1.75rem; }
+.cs-metric .num {
+  font-family: "Source Serif 4", serif;
+  font-weight: 300;
+  font-size: clamp(2rem, 3.2vw, 2.75rem);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin-bottom: 0.6rem;
+}
+.cs-metric .lbl {
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  color: var(--secondary);
+}
+@media (max-width: 720px) {
+  .cs-metrics { grid-template-columns: 1fr; }
+}
+
+/* ---- pull quote ---- */
+.cs-quote {
+  font-family: "Source Serif 4", serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+  line-height: 1.35;
+  letter-spacing: -0.012em;
+  color: var(--text);
+  margin: 0;
+}
+.cs-quote-by {
+  font-family: "DM Mono", monospace;
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--secondary);
+  margin-top: 1.5rem;
+}
+
+/* ---- foot nav ---- */
+.cs-foot {
+  margin-top: clamp(3rem, 6vw, 5rem);
+  padding: 3rem 0;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+.cs-foot a {
+  font-family: "DM Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text);
+  text-decoration: none;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+  transition: border-color 200ms ease;
+}
+.cs-foot a:hover { border-color: var(--text); }
+.cs-foot .muted { border: none; color: var(--tertiary); padding: 0; }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="mark" href="../index.html#top">KIM&nbsp;INOUYE</a>
+  <a class="back" href="../index.html#work"><span>&larr;</span>All work</a>
+</nav>
+
+<div class="shell">
+
+  <!-- ============ HEADER ============ -->
+  <header class="cs-head">
+    <div class="cs-kicker">[Service category, e.g. Operational diagnostic]</div>
+    <h1 class="cs-title">[Case study title — the outcome in plain words]</h1>
+    <p class="cs-dek">[One or two sentences: who the client was, what was breaking, and the result. Plain and direct.]</p>
+    <div class="cs-meta">
+      <div><span class="k">Client</span><span class="v">[Company / team]</span></div>
+      <div><span class="k">Role</span><span class="v">[e.g. Operations lead]</span></div>
+      <div><span class="k">Engagement</span><span class="v">[e.g. 12-week diagnostic]</span></div>
+      <div><span class="k">Year</span><span class="v">[2025]</span></div>
+    </div>
+  </header>
+
+  <!-- ============ LEAD IMAGE ============ -->
+  <div class="cs-figure">
+    <div class="ph"><span>lead image — 16:9</span></div>
+    <!-- replace with:  <img src="../images/your-shot.png" alt="[describe]"> -->
+    <p class="cs-caption">[Optional caption]</p>
+  </div>
+
+  <!-- ============ BODY ============ -->
+  <section class="cs-section">
+    <h2>The situation</h2>
+    <p>[What was happening when you walked in. The symptom the client felt, in their words. Keep it concrete.]</p>
+    <p>[Why it mattered — the cost of leaving it alone.]</p>
+  </section>
+
+  <section class="cs-section">
+    <h2>What I found</h2>
+    <p>[The real problem underneath the symptom. What the diagnostic surfaced.]</p>
+    <ul>
+      <li>[Finding one]</li>
+      <li>[Finding two]</li>
+      <li>[Finding three]</li>
+    </ul>
+  </section>
+
+  <div class="cs-figure">
+    <div class="ph"><span>diagram / before-state — 16:9</span></div>
+    <p class="cs-caption">[Optional caption]</p>
+  </div>
+
+  <section class="cs-section">
+    <h2>What I did</h2>
+    <p>[The approach. How you absorbed the friction and got the new way of working to stick.]</p>
+    <ul>
+      <li>[Action one]</li>
+      <li>[Action two]</li>
+      <li>[Action three]</li>
+    </ul>
+  </section>
+
+  <section class="cs-section">
+    <h2>The outcome</h2>
+    <p>[The result in one line, then let the numbers carry it.]</p>
+    <div class="cs-metrics">
+      <div class="cs-metric"><div class="num">[26% &rarr; 66%]</div><div class="lbl">[What this number measures]</div></div>
+      <div class="cs-metric"><div class="num">[3x]</div><div class="lbl">[What this number measures]</div></div>
+      <div class="cs-metric"><div class="num">[6 mo]</div><div class="lbl">[What this number measures]</div></div>
+    </div>
+  </section>
+
+  <section class="cs-section">
+    <figure>
+      <p class="cs-quote">&ldquo;[Optional client quote — short, specific, in their voice.]&rdquo;</p>
+      <p class="cs-quote-by">[Name, title, company]</p>
+    </figure>
+  </section>
+
+  <!-- ============ FOOT NAV ============ -->
+  <div class="cs-foot">
+    <a href="../index.html#work"><span>&larr;</span> All work</a>
+    <a class="muted" href="../index.html#contact">Start a conversation &rarr;</a>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en" data-palette="cocoa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kim Inouye — Product, Design & Operations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..600&family=DM+Sans:opsz,wght@9..40,300..600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   Palette tokens — three quiet monochrome variants.
+   Tweaks panel switches which palette is active by setting
+   data-palette on <html>. All warmth lives in the hue of bg,
+   text, and border; no accent colors anywhere.
+   ============================================================ */
+:root,
+html[data-palette="cocoa"] {
+  /* Cocoa — warm espresso; amber-cream text */
+  --bg:        oklch(0.150 0.018 52);
+  --bg-rise:   oklch(0.202 0.017 52);
+  --text:      oklch(0.944 0.029 70);
+  --secondary: oklch(0.662 0.022 66);
+  --tertiary:  oklch(0.592 0.018 62);
+  --border:    oklch(0.300 0.016 60);
+  --hairline:  oklch(0.256 0.013 60);
+  --grid:      oklch(0.300 0.016 60 / 0.18);
+}
+html[data-palette="linen"] {
+  /* Linen — lifted, creamy paper warmth */
+  --bg:        oklch(0.170 0.013 92);
+  --bg-rise:   oklch(0.222 0.012 92);
+  --text:      oklch(0.953 0.026 96);
+  --secondary: oklch(0.672 0.017 94);
+  --tertiary:  oklch(0.596 0.013 92);
+  --border:    oklch(0.310 0.011 90);
+  --hairline:  oklch(0.266 0.009 90);
+  --grid:      oklch(0.310 0.011 90 / 0.18);
+}
+html[data-palette="stone"] {
+  /* Stone — cool neutral charcoal; no warmth */
+  --bg:        oklch(0.156 0.003 250);
+  --bg-rise:   oklch(0.208 0.003 250);
+  --text:      oklch(0.950 0.003 250);
+  --secondary: oklch(0.666 0.004 250);
+  --tertiary:  oklch(0.594 0.004 250);
+  --border:    oklch(0.306 0.004 250);
+  --hairline:  oklch(0.262 0.003 250);
+  --grid:      oklch(0.306 0.004 250 / 0.18);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "DM Sans", system-ui, sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.65;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ============================================================
+   Layout
+   ============================================================ */
+.shell {
+  position: relative;
+  z-index: 1;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 clamp(1.5rem, 4vw, 3.5rem);
+}
+
+nav.topnav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 50;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem clamp(1.5rem, 4vw, 3.5rem);
+  background: color-mix(in oklab, var(--bg) 86%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--hairline);
+}
+nav.topnav .mark {
+  font-family: "DM Mono", monospace;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  color: var(--text);
+  text-decoration: none;
+}
+nav.topnav .nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+nav.topnav .nav-links a {
+  font-family: "DM Mono", monospace;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text);
+  text-decoration: none;
+  transition: color 200ms ease, opacity 200ms ease;
+  opacity: 0.85;
+}
+nav.topnav .nav-links a:hover { opacity: 1; }
+
+@media (max-width: 720px) {
+  nav.topnav .nav-links { display: none; }
+}
+
+/* ============================================================
+   Section scaffolding
+   ============================================================ */
+section { padding: clamp(5rem, 9vw, 8.5rem) 0; }
+section + section { border-top: 1px solid var(--hairline); }
+
+.kicker {
+  font-family: "DM Mono", monospace;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text);
+  margin-bottom: 2.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  opacity: 0.85;
+}
+.kicker::before {
+  content: "";
+  width: 28px;
+  height: 1px;
+  background: var(--border);
+  display: inline-block;
+}
+
+h1, h2, h3, h4 {
+  font-family: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  font-weight: 400;
+  color: var(--text);
+  letter-spacing: -0.012em;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+p { text-wrap: pretty; }
+
+/* ============================================================
+   Hero
+   ============================================================ */
+.hero {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: clamp(8rem, 14vw, 12rem);
+  padding-bottom: clamp(5rem, 9vw, 8rem);
+  min-height: 92vh;
+  border-top: none !important;
+}
+.hero-name {
+  font-size: clamp(3rem, 5vw, 4.6rem);
+  line-height: 0.95;
+  letter-spacing: -0.025em;
+  margin-bottom: 1.4rem;
+}
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.08fr 0.82fr;
+  gap: clamp(2.5rem, 5vw, 4.5rem);
+  align-items: center;
+  width: 100%;
+}
+.hero-grid .hero-bio { margin-bottom: 1.25rem; }
+.hero-proof {
+  font-size: clamp(1rem, 1.2vw, 1.0625rem);
+  line-height: 1.6;
+  color: var(--secondary);
+  max-width: 40ch;
+  margin-bottom: 2.5rem;
+}
+.hero-photo {
+  aspect-ratio: 1236 / 1560;
+  max-height: 600px;
+  background: var(--bg-rise);
+  border: 1px solid var(--hairline);
+  overflow: hidden;
+}
+.hero-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 10%;
+  display: block;
+  filter: grayscale(0.75) contrast(1.05) brightness(0.97);
+}
+@media (max-width: 880px) {
+  .hero-grid { grid-template-columns: 1fr; }
+  .hero-photo { max-width: 420px; order: -1; }
+}
+.hero-name em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--secondary);
+}
+.hero-role {
+  font-family: "DM Mono", monospace;
+  font-size: 13px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--secondary);
+  margin-bottom: 3rem;
+}
+.hero-bio {
+  font-size: clamp(1.25rem, 1.7vw, 1.5rem);
+  line-height: 1.65;
+  color: var(--text);
+  font-weight: 400;
+  max-width: 32ch;
+  margin-bottom: 2.75rem;
+}
+.hero-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.75rem 2.5rem;
+}
+.hero-links a {
+  font-family: "DM Mono", monospace;
+  font-size: 12.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text);
+  text-decoration: none;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+  transition: border-color 200ms ease, color 200ms ease;
+}
+.hero-links a:hover { border-bottom-color: var(--text); }
+
+@media (max-width: 880px) {
+  .hero {
+    min-height: auto;
+  }
+}
+
+/* ============================================================
+   Stats — quiet horizontal row, no glow, no gradient
+   ============================================================ */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(2rem, 5vw, 4rem);
+}
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--border);
+}
+.stat-num {
+  font-family: "Source Serif 4", serif;
+  font-size: clamp(3rem, 5.5vw, 4.5rem);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+.stat-num small {
+  font-size: 0.5em;
+  color: var(--secondary);
+  margin-left: 0.1em;
+  font-weight: 300;
+}
+.stat-label {
+  font-family: "DM Mono", monospace;
+  font-size: 11.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--secondary);
+  line-height: 1.5;
+}
+@media (max-width: 880px) {
+  .stats { grid-template-columns: 1fr 1fr; }
+}
+
+/* ============================================================
+   Companies — wordmark row, set in serif
+   ============================================================ */
+.companies-headline {
+  font-size: clamp(1.75rem, 2.6vw, 2.25rem);
+  line-height: 1.25;
+  max-width: 32ch;
+  color: var(--text);
+  font-weight: 400;
+  margin-bottom: 4rem;
+}
+.companies-headline em { font-style: italic; color: var(--secondary); font-weight: 300; }
+.company-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: clamp(1.5rem, 3.5vw, 2.75rem) clamp(2rem, 4.5vw, 3.25rem);
+  border-top: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+  padding: 3rem 0;
+}
+.company {
+  font-family: "Source Serif 4", serif;
+  font-weight: 300;
+  font-size: clamp(1.5rem, 2.8vw, 2.25rem);
+  letter-spacing: -0.02em;
+  color: var(--text);
+  line-height: 1;
+}
+.company strong {
+  font-weight: 400;
+  color: var(--text);
+}
+.company i {
+  font-family: "DM Mono", monospace;
+  font-style: normal;
+  font-size: 11.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--tertiary);
+  display: block;
+  margin-top: 0.5rem;
+}
+
+/* ---- Clients presentation variants (data-clients on <html>) ---- */
+/* "headline" = the default look above. */
+
+/* Strip — demoted, quiet proof band */
+html[data-clients="strip"] #clients { padding: clamp(2.75rem, 4.5vw, 4rem) 0; }
+html[data-clients="strip"] .companies-headline { display: none; }
+html[data-clients="strip"] .clients-head .kicker { margin-bottom: 1.6rem; }
+html[data-clients="strip"] .company-row {
+  border: none;
+  padding: 0;
+  gap: clamp(0.9rem, 2.2vw, 1.6rem) clamp(1.4rem, 3vw, 2.4rem);
+}
+html[data-clients="strip"] .company {
+  font-size: clamp(1.1rem, 1.7vw, 1.45rem);
+  font-weight: 300;
+  color: var(--secondary);
+}
+
+/* Two-column — label/heading left, names wrapping right */
+html[data-clients="twocol"] #clients {
+  display: grid;
+  grid-template-columns: minmax(170px, 0.75fr) 1.7fr;
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+html[data-clients="twocol"] .companies-headline {
+  margin-bottom: 0;
+  font-size: clamp(1.4rem, 2vw, 1.85rem);
+  max-width: 16ch;
+}
+html[data-clients="twocol"] .company-row {
+  border: none;
+  padding: 0;
+  gap: clamp(0.9rem, 2vw, 1.4rem) clamp(1.4rem, 3vw, 2.4rem);
+}
+html[data-clients="twocol"] .company { font-size: clamp(1.2rem, 1.8vw, 1.6rem); }
+@media (max-width: 720px) {
+  html[data-clients="twocol"] #clients { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   About — photo + prose
+   ============================================================ */
+.about {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: clamp(2.5rem, 6vw, 5.5rem);
+  align-items: start;
+}
+.about-photo {
+  width: 100%;
+  aspect-ratio: 1330 / 1444;
+  background: var(--bg-rise);
+  border: 1px solid var(--hairline);
+  overflow: hidden;
+}
+.about-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(0.7) contrast(1.04) brightness(0.96);
+}
+.about-headline {
+  font-size: clamp(2.25rem, 3.8vw, 3.5rem);
+  line-height: 1.15;
+  margin-bottom: 2rem;
+  max-width: 18ch;
+}
+.about-headline em { font-style: italic; color: var(--secondary); font-weight: 300; }
+.about-body p {
+  font-size: clamp(1.0625rem, 1.2vw, 1.1875rem);
+  line-height: 1.8;
+  color: var(--text);
+  margin-bottom: 1.5rem;
+  max-width: 52ch;
+}
+.about-body p.subtle { color: var(--secondary); }
+
+@media (max-width: 880px) {
+  .about { grid-template-columns: 1fr; }
+  .about-photo { max-width: 480px; }
+}
+
+/* ============================================================
+   Case studies
+   ============================================================ */
+.cases-intro {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: end;
+  margin-bottom: clamp(4rem, 7vw, 6rem);
+}
+.cases-intro h2 {
+  font-size: clamp(2.5rem, 4.5vw, 4rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.cases-intro h2 em { font-style: italic; color: var(--secondary); font-weight: 300; }
+.cases-intro p {
+  font-size: clamp(1.125rem, 1.3vw, 1.25rem);
+  line-height: 1.75;
+  color: var(--secondary);
+  max-width: 44ch;
+}
+
+.case {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(2rem, 5vw, 4.5rem);
+  padding: clamp(3.5rem, 6vw, 5.5rem) 0;
+  border-top: 1px solid var(--hairline);
+  align-items: start;
+}
+.case:nth-child(even) .case-media { order: -1; }
+
+.case-number {
+  font-family: "DM Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  color: var(--tertiary);
+  margin-bottom: 1.25rem;
+}
+.case-title {
+  font-size: clamp(1.75rem, 2.6vw, 2.4rem);
+  line-height: 1.2;
+  margin-bottom: 1.75rem;
+  letter-spacing: -0.015em;
+}
+.case-section { margin-bottom: 1.75rem; }
+.case-section h4 {
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--secondary);
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+}
+.case-section p,
+.case-section li {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: var(--text);
+  font-weight: 400;
+}
+.case-section ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.case-section li {
+  padding-left: 1.25rem;
+  position: relative;
+  color: var(--text);
+}
+.case-section li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: var(--tertiary);
+}
+
+.case-media {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: sticky;
+  top: 6rem;
+}
+.case-chart {
+  background: var(--bg-rise);
+  border: 1px solid var(--hairline);
+  padding: 1.75rem 1.75rem 1.5rem;
+  aspect-ratio: 16 / 11;
+  display: flex;
+  flex-direction: column;
+}
+.case-chart h5 {
+  font-family: "DM Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--secondary);
+  font-weight: 500;
+  margin-bottom: 0.4rem;
+}
+.case-chart .chart-sub {
+  font-family: "Source Serif 4", serif;
+  font-size: 1rem;
+  color: var(--text);
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+.case-chart svg {
+  flex: 1;
+  width: 100%;
+  display: block;
+}
+.case-shot {
+  background: var(--bg-rise);
+  border: 1px solid var(--hairline);
+  padding: 1.25rem;
+  overflow: hidden;
+}
+.case-shot img {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: grayscale(0.85) contrast(1.02) brightness(0.95);
+  opacity: 0.92;
+}
+
+@media (max-width: 880px) {
+  .case { grid-template-columns: 1fr; }
+  .case:nth-child(even) .case-media { order: 0; }
+  .case-media { position: static; }
+  .cases-intro { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   Expertise — stacked text blocks, no cards, no icons
+   ============================================================ */
+.expertise-headline {
+  font-size: clamp(2.5rem, 4.5vw, 4rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: clamp(3.5rem, 6vw, 5rem);
+  max-width: 18ch;
+}
+.expertise-headline em { font-style: italic; color: var(--secondary); font-weight: 300; }
+
+.expertise-list {
+  display: flex;
+  flex-direction: column;
+}
+.exp-block {
+  display: grid;
+  grid-template-columns: 0.4fr 1fr;
+  gap: clamp(2rem, 5vw, 4rem);
+  padding: clamp(2.5rem, 4.5vw, 3.5rem) 0;
+  border-top: 1px solid var(--hairline);
+  align-items: start;
+}
+.exp-block:last-child { border-bottom: 1px solid var(--hairline); }
+.exp-block h3 {
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  line-height: 1.15;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+.exp-block p {
+  font-size: clamp(1.0625rem, 1.2vw, 1.1875rem);
+  line-height: 1.85;
+  color: var(--text);
+  max-width: 60ch;
+}
+
+@media (max-width: 720px) {
+  .exp-block { grid-template-columns: 1fr; gap: 1rem; }
+}
+
+/* ============================================================
+   Services — engagement spectrum
+   ============================================================ */
+.spec-head {
+  font-size: clamp(2.5rem, 4.5vw, 4rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 2.5rem;
+  max-width: 18ch;
+}
+.spec-head em { font-style: italic; color: var(--secondary); font-weight: 300; }
+.axis {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+.axis-lbl {
+  font-family: "DM Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--secondary);
+  white-space: nowrap;
+}
+.axis-track {
+  position: relative;
+  height: 1px;
+  background: linear-gradient(to right, var(--hairline), var(--border));
+}
+.axis-track::after {
+  content: "";
+  position: absolute;
+  right: -1px; top: -3px;
+  border-left: 6px solid var(--border);
+  border-top: 3.5px solid transparent;
+  border-bottom: 3.5px solid transparent;
+}
+.spectrum {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--border);
+}
+.scol {
+  padding: 1.85rem 1.5rem 0;
+  border-right: 1px solid var(--hairline);
+  display: flex;
+  flex-direction: column;
+}
+.scol:first-child { padding-left: 0; }
+.scol:last-child { border-right: none; padding-right: 0; }
+.meter { display: flex; gap: 4px; margin-bottom: 1rem; }
+.meter i { width: 16px; height: 3px; background: var(--hairline); display: block; }
+.meter i.on { background: var(--text); }
+.snum {
+  font-family: "DM Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  color: var(--tertiary);
+  margin-bottom: 0.6rem;
+}
+.sname {
+  font-family: "Source Serif 4", serif;
+  font-size: clamp(1.25rem, 1.6vw, 1.45rem);
+  line-height: 1.15;
+  letter-spacing: -0.012em;
+  margin-bottom: 0.85rem;
+}
+.sdesc {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text);
+  margin-bottom: 1.1rem;
+}
+.sbullets {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.75rem;
+}
+.sbullets li {
+  position: relative;
+  padding-left: 1.1rem;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--secondary);
+}
+.sbullets li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 9px;
+  height: 1px;
+  background: var(--tertiary);
+}
+.s-detail { display: flex; flex-direction: column; }
+.proof {
+  margin-top: auto;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--hairline);
+}
+.proof .pnum {
+  font-family: "Source Serif 4", serif;
+  font-weight: 300;
+  font-size: clamp(1.5rem, 2vw, 1.75rem);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin-bottom: 0.5rem;
+}
+.proof .ptext {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--secondary);
+}
+@media (max-width: 880px) {
+  .spectrum { grid-template-columns: 1fr; }
+  .scol { border-right: none; border-left: none; border-bottom: 1px solid var(--hairline); padding: 1.75rem 0; }
+  .scol:last-child { border-bottom: none; }
+}
+
+/* ---- Tweak-driven variants (data-* on <html>) ---- */
+/* Services layout: "four" (default) | "two" | "rows" */
+html[data-svc="two"] .spectrum { grid-template-columns: 1fr 1fr; }
+html[data-svc="two"] .scol { padding: 1.85rem 1.5rem; border-bottom: 1px solid var(--hairline); }
+html[data-svc="two"] .scol:nth-child(odd) { padding-left: 0; border-right: 1px solid var(--hairline); }
+html[data-svc="two"] .scol:nth-child(even) { padding-right: 0; border-right: none; }
+html[data-svc="two"] .scol:nth-child(-n+2) { border-top: none; }
+
+html[data-svc="rows"] .spectrum { display: block; }
+html[data-svc="rows"] .scol {
+  display: grid;
+  grid-template-columns: minmax(190px, 0.8fr) 1.7fr minmax(180px, 0.95fr);
+  column-gap: clamp(2rem, 5vw, 5.5rem);
+  padding: clamp(2rem, 3.4vw, 3rem) 0;
+  border-right: none;
+  border-bottom: 1px solid var(--hairline);
+  align-items: start;
+}
+html[data-svc="rows"] .scol:last-child { border-bottom: none; }
+html[data-svc="rows"] .sname { margin-bottom: 0; }
+html[data-svc="rows"] .sbullets { margin-bottom: 0; }
+html[data-svc="rows"] .proof { margin-top: 0; padding-top: 0; border-top: none; }
+@media (max-width: 880px) {
+  html[data-svc="rows"] .scol { grid-template-columns: 1fr; row-gap: 1.25rem; padding: 1.75rem 0; }
+  html[data-svc="rows"] .proof { margin-top: 0; }
+}
+
+/* Stack — metric-forward: identity + detail on the left, a large proof number anchoring the right */
+html[data-svc="stack"] .spectrum { display: block; }
+html[data-svc="stack"] .scol {
+  display: grid;
+  grid-template-columns: 1.7fr 1fr;
+  column-gap: clamp(2rem, 5vw, 5rem);
+  padding: clamp(2rem, 3.4vw, 3rem) 0;
+  border-right: none;
+  border-bottom: 1px solid var(--hairline);
+  align-items: center;
+}
+html[data-svc="stack"] .scol:last-child { border-bottom: none; }
+html[data-svc="stack"] .s-id { grid-column: 1; }
+html[data-svc="stack"] .s-detail { grid-column: 1; }
+html[data-svc="stack"] .sname {
+  font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+  margin-bottom: 0;
+}
+html[data-svc="stack"] .sdesc { margin-bottom: 0; max-width: 42ch; }
+html[data-svc="stack"] .sbullets { margin-bottom: 0; margin-top: 1rem; }
+html[data-svc="stack"] .proof {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  margin-top: 0;
+  padding-top: 0;
+  padding-left: clamp(2rem, 4vw, 3.5rem);
+  border-top: none;
+  border-left: 1px solid var(--hairline);
+}
+html[data-svc="stack"] .proof .pnum { font-size: clamp(2.25rem, 4vw, 3.25rem); }
+@media (max-width: 880px) {
+  html[data-svc="stack"] .scol { grid-template-columns: 1fr; row-gap: 1.5rem; padding: 1.75rem 0; }
+  html[data-svc="stack"] .proof {
+    grid-column: 1;
+    grid-row: auto;
+    padding-left: 0;
+    padding-top: 1.25rem;
+    border-left: none;
+    border-top: 1px solid var(--hairline);
+  }
+}
+
+html[data-bullets="off"] .sbullets { display: none; }
+html[data-bullets="off"] .sdesc { margin-bottom: 1.75rem; }
+html[data-portrait="soft"] .hero-photo img { filter: grayscale(0.45) contrast(1) brightness(1); }
+
+/* ============================================================
+   Selected work — case study listing
+   ============================================================ */
+.work-headline {
+  font-size: clamp(2.5rem, 4.5vw, 4rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 2.5rem;
+  max-width: 18ch;
+}
+.work-headline em { font-style: italic; color: var(--secondary); font-weight: 300; }
+.work-list {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--border);
+}
+.work-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: baseline;
+  gap: clamp(1.25rem, 3vw, 2.75rem);
+  padding: clamp(1.6rem, 2.6vw, 2.1rem) 0;
+  border-bottom: 1px solid var(--hairline);
+  text-decoration: none;
+  color: var(--text);
+  transition: padding-left 220ms ease;
+}
+.work-item:hover { padding-left: 0.75rem; }
+.work-num {
+  font-family: "DM Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  color: var(--tertiary);
+}
+.work-main { display: flex; flex-direction: column; gap: 0.4rem; }
+.work-title {
+  font-family: "Source Serif 4", serif;
+  font-size: clamp(1.3rem, 2vw, 1.65rem);
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+}
+.work-desc {
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--secondary);
+  max-width: 52ch;
+}
+.work-meta {
+  font-family: "DM Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--secondary);
+  white-space: nowrap;
+  align-self: center;
+}
+.work-arrow {
+  font-family: "DM Mono", monospace;
+  font-size: 15px;
+  color: var(--secondary);
+  align-self: center;
+  transition: transform 220ms ease, color 220ms ease;
+}
+.work-item:hover .work-arrow { transform: translate(2px, -2px); color: var(--text); }
+@media (max-width: 720px) {
+  .work-item { grid-template-columns: auto 1fr auto; }
+  .work-meta { display: none; }
+}
+
+/* ============================================================
+   Things I've built — quiet editorial table
+   ============================================================ */
+.builds-headline {
+  font-size: clamp(2.5rem, 4.5vw, 4rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: clamp(3rem, 5vw, 4.5rem);
+  max-width: 18ch;
+}
+.builds-headline em { font-style: italic; color: var(--secondary); font-weight: 300; }
+
+.builds-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.builds-table th {
+  font-family: "DM Mono", monospace;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--text);
+  padding: 0 0 1rem 0;
+  border-bottom: 1px solid var(--border);
+  vertical-align: bottom;
+}
+.builds-table th.bt-product { width: 22%; padding-right: 1.5rem; }
+.builds-table th.bt-what    { width: 52%; padding-right: 1.5rem; }
+.builds-table th.bt-links   { width: 26%; text-align: right; }
+
+.builds-table td {
+  padding: 2rem 1.5rem 2rem 0;
+  border-bottom: 1px solid var(--hairline);
+  vertical-align: top;
+}
+.builds-table tr:last-child td { border-bottom: 1px solid var(--border); }
+
+.builds-table .bt-product span {
+  font-family: "Source Serif 4", serif;
+  font-size: clamp(1.25rem, 1.6vw, 1.5rem);
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+  color: var(--text);
+}
+.builds-table .bt-what p {
+  font-size: clamp(1.0625rem, 1.15vw, 1.15rem);
+  line-height: 1.7;
+  color: var(--text);
+  max-width: 52ch;
+}
+.builds-table .bt-links {
+  padding-right: 0;
+  text-align: right;
+  white-space: nowrap;
+}
+.builds-table .bt-links a {
+  display: block;
+  font-family: "DM Mono", monospace;
+  font-size: 12.5px;
+  letter-spacing: 0.1em;
+  color: var(--text);
+  text-decoration: none;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid transparent;
+  transition: border-color 200ms ease, color 200ms ease;
+  width: fit-content;
+  margin-left: auto;
+}
+.builds-table .bt-links a + a { margin-top: 0.35rem; }
+.builds-table .bt-links a:hover { border-bottom-color: var(--text); }
+.builds-table .bt-links .arr {
+  display: inline-block;
+  margin-left: 0.45em;
+  color: var(--secondary);
+}
+
+@media (max-width: 880px) {
+  .builds-table, .builds-table thead, .builds-table tbody, .builds-table tr, .builds-table td, .builds-table th {
+    display: block;
+    width: 100% !important;
+  }
+  .builds-table thead { display: none; }
+  .builds-table tr {
+    padding: 2rem 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .builds-table tr:last-child { border-bottom: 1px solid var(--border); }
+  .builds-table td {
+    padding: 0 0 1rem 0;
+    border-bottom: none;
+  }
+  .builds-table .bt-links {
+    text-align: left;
+  }
+  .builds-table .bt-links a {
+    margin-left: 0;
+  }
+}
+
+/* ============================================================
+   Contact
+   ============================================================ */
+.contact-headline {
+  font-size: clamp(2.75rem, 5.5vw, 5rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  margin-bottom: 2rem;
+  max-width: 16ch;
+}
+.contact-headline em { font-style: italic; color: var(--secondary); font-weight: 300; }
+.contact-body {
+  font-size: clamp(1.125rem, 1.35vw, 1.3rem);
+  line-height: 1.7;
+  color: var(--text);
+  max-width: 44ch;
+  margin-bottom: 3rem;
+}
+.contact-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-width: 28rem;
+}
+.contact-row {
+  display: grid;
+  grid-template-columns: 7rem 1fr auto;
+  gap: 1.25rem;
+  align-items: baseline;
+  padding: 0.6rem 0;
+  text-decoration: none;
+  color: var(--text);
+  transition: color 200ms ease;
+}
+.contact-row:hover { color: var(--text); }
+.contact-row:hover .cv { border-bottom-color: var(--text); }
+.contact-row .ck {
+  font-family: "DM Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--secondary);
+}
+.contact-row .cv {
+  font-family: "DM Sans", sans-serif;
+  font-size: 1.0625rem;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.2rem;
+  transition: border-color 200ms ease;
+}
+.contact-row .arrow {
+  font-family: "DM Mono", monospace;
+  color: var(--secondary);
+  font-size: 14px;
+}
+
+@media (max-width: 720px) {
+  .contact-row { grid-template-columns: 1fr auto; }
+  .contact-row .ck { grid-column: 1 / -1; margin-bottom: -0.25rem; }
+}
+
+.icon-row { display: flex; gap: 0.875rem; }
+.icon-btn {
+  width: 54px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color 200ms ease, background 200ms ease;
+}
+.icon-btn:hover { border-color: var(--text); background: var(--bg-rise); }
+.icon-btn svg { width: 22px; height: 22px; display: block; }
+.icon-btn .li {
+  font-family: "DM Sans", sans-serif;
+  font-weight: 600;
+  font-size: 19px;
+  letter-spacing: -0.02em;
+}
+
+/* ============================================================
+   Footer
+   ============================================================ */
+footer {
+  padding: 3rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  border-top: 1px solid var(--hairline);
+}
+footer p {
+  font-family: "DM Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--tertiary);
+}
+
+/* ============================================================
+   Tweaks panel — palette swap surface
+   ============================================================ */
+#tweaks-mount {
+  font-family: "DM Sans", system-ui, sans-serif;
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="mark" href="#top">KIM&nbsp;INOUYE</a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#clients">Clients</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="shell" id="top">
+
+  <!-- ===========================  HERO  =========================== -->
+  <section class="hero" data-screen-label="01 Hero">
+    <div class="hero-grid">
+      <div>
+        <h1 class="hero-name">Kim<br>Inouye</h1>
+        <p class="hero-role">Operations consulting</p>
+        <p class="hero-bio">I build the operating system your team is missing, and I get them to actually use it. Most ops consultants hand you a framework and leave. The framework dies. I absorb the political friction, align each stakeholder&rsquo;s real incentive, and stay until the new way of working is the default, not the exception.</p>
+        <p class="hero-proof">Helping leaders scale design and product teams</p>
+        <div class="hero-links">
+          <a href="#services">Services</a>
+          <a href="https://www.linkedin.com/in/product-design-operations/" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="mailto:kim@aperi.co">Email</a>
+        </div>
+      </div>
+      <div class="hero-photo">
+        <img src="uploads/kim_brannigan_241.jpg" alt="Kim Inouye">
+      </div>
+    </div>
+  </section>
+
+  <!-- ===========================  SERVICES  =========================== -->
+  <section id="services" data-screen-label="02 Services">
+    <div class="kicker">Engagements</div>
+    <h2 class="spec-head">Ways to <em>work together.</em></h2>
+    <div class="axis">
+      <span class="axis-lbl">Lower commitment</span>
+      <span class="axis-track"></span>
+      <span class="axis-lbl">Higher commitment</span>
+    </div>
+    <div class="spectrum">
+      <div class="scol">
+        <div class="s-id">
+          <div class="meter"><i class="on"></i><i></i><i></i><i></i></div>
+          <div class="snum">01</div>
+          <div class="sname">Operational diagnostic</div>
+        </div>
+        <div class="s-detail">
+        <p class="sdesc">Find where the work breaks before you spend on a fix.</p>
+        <ul class="sbullets">
+          <li>Time and workflow audit</li>
+          <li>Bottleneck map</li>
+          <li>Prioritized fix list</li>
+        </ul>
+        </div>
+        <div class="proof">
+          <div class="pnum">26% &rarr; 66%</div>
+          <p class="ptext">Designer focus time per work week, at PayPal.</p>
+        </div>
+      </div>
+      <div class="scol">
+        <div class="s-id">
+          <div class="meter"><i class="on"></i><i class="on"></i><i></i><i></i></div>
+          <div class="snum">02</div>
+          <div class="sname">Ways of working setup</div>
+        </div>
+        <div class="s-detail">
+        <p class="sdesc">Intake, rhythms, and tooling configuration.</p>
+        <ul class="sbullets">
+          <li>Intake and triage process</li>
+          <li>Planning, tracking, and reporting</li>
+          <li>Communications strategy</li>
+          <li>Workflow automation</li>
+        </ul>
+        </div>
+        <div class="proof">
+          <div class="pnum">300-person</div>
+          <p class="ptext">Org-wide ways of working standard, built and adopted.</p>
+        </div>
+      </div>
+      <div class="scol">
+        <div class="s-id">
+          <div class="meter"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+          <div class="snum">03</div>
+          <div class="sname">AI adoption advisory</div>
+        </div>
+        <div class="s-detail">
+        <p class="sdesc">An operating model for AI that actually gets used.</p>
+        <ul class="sbullets">
+          <li>AI strategy &amp; enablement</li>
+          <li>Pilot design and rollout</li>
+          <li>Measurement planning and tracking</li>
+          <li>Business case development</li>
+        </ul>
+        </div>
+        <div class="proof">
+          <div class="pnum">~80%</div>
+          <p class="ptext">Time saved across 8 pilots in 6 months. First AI tool cleared by legal, risk, and compliance.</p>
+        </div>
+      </div>
+      <div class="scol">
+        <div class="s-id">
+          <div class="meter"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div>
+          <div class="snum">04</div>
+          <div class="sname">Fractional / interim ops leadership</div>
+        </div>
+        <div class="s-detail">
+        <p class="sdesc">Run your ops function while you scale or decide whether to hire.</p>
+        <ul class="sbullets">
+          <li>Embedded ops leadership</li>
+          <li>Budget and vendor management</li>
+          <li>Program management</li>
+          <li>Culture and L&amp;D management</li>
+        </ul>
+        </div>
+        <div class="proof">
+          <div class="pnum">72% &rarr; 89%</div>
+          <p class="ptext">Engagement during 3x scale. Design ops built 0 to 1 at Etsy.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===========================  CLIENTS  =========================== -->
+  <section id="clients" data-screen-label="03 Clients">
+    <div class="clients-head">
+      <div class="kicker">Clients</div>
+      <h2 class="companies-headline">Brands and teams I&rsquo;ve <em>worked with.</em></h2>
+    </div>
+    <div class="company-row">
+      <span class="company">PayPal</span>
+      <span class="company">Etsy</span>
+      <span class="company">FLOR</span>
+      <span class="company">Grainger</span>
+      <span class="company">CoverGirl</span>
+      <span class="company">Olay</span>
+      <span class="company">Est&eacute;e Lauder</span>
+      <span class="company">Procter &amp; Gamble</span>
+      <span class="company">Olympics</span>
+    </div>
+  </section>
+
+  <!-- ===========================  SELECTED WORK (hidden for now) ===========================
+  <section id="work" data-screen-label="04 Selected work">
+    <div class="kicker">Selected work</div>
+    <h2 class="work-headline">Case <em>studies.</em></h2>
+    <div class="work-list">
+      <a class="work-item" href="case-studies/paypal-focus-time.html">
+        <span class="work-num">01</span>
+        <span class="work-main">
+          <span class="work-title">Doubling designer focus time at PayPal</span>
+          <span class="work-desc">A workflow audit and operating-model reset moved focus time from 26% to 66% of the work week.</span>
+        </span>
+        <span class="work-meta">Operational diagnostic</span>
+        <span class="work-arrow">&#8599;</span>
+      </a>
+      <a class="work-item" href="case-studies/etsy-design-ops.html">
+        <span class="work-num">02</span>
+        <span class="work-main">
+          <span class="work-title">Building design ops 0 to 1 at Etsy</span>
+          <span class="work-desc">Stood up the function from scratch and held engagement at 72% to 89% through a 3x scale.</span>
+        </span>
+        <span class="work-meta">Fractional ops leadership</span>
+        <span class="work-arrow">&#8599;</span>
+      </a>
+    </div>
+  </section>
+  =========================== -->
+
+  <!-- ===========================  CONTACT  =========================== -->
+  <section id="contact" data-screen-label="05 Contact">
+    <div class="kicker">Work together</div>
+    <h2 class="contact-headline">Tell me where the work is <em>getting stuck.</em></h2>
+    <p class="contact-body">I take on a small number of operations engagements at a time, from a two-week diagnostic to fractional leadership. </p>
+    <div class="icon-row">
+      <a class="icon-btn" href="mailto:kim@aperi.co" aria-label="Email Kim">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5.5" width="18" height="13" rx="1.5"></rect><path d="M3.5 7 L12 13 L20.5 7"></path></svg>
+      </a>
+      <a class="icon-btn" href="https://www.linkedin.com/in/product-design-operations/" target="_blank" rel="noopener" aria-label="Kim on LinkedIn"><span class="li">in</span></a>
+    </div>
+  </section>
+
+  <!-- ===========================  FOOTER  =========================== -->
+  <footer>
+    <p>&copy; 2026 Aperi LLC &middot; Chicago, IL</p>
+    <p>Kim Inouye, founder &amp; principal</p>
+  </footer>
+
+</div>
+
+<!-- Tweaks mount -->
+<div id="tweaks-mount"></div>
+
+<script id="tweak-defaults">
+window.TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "palette": "cocoa",
+  "svc": "four",
+  "bullets": false,
+  "portrait": "soft",
+  "clients": "twocol"
+}/*EDITMODE-END*/;
+</script>
+
+<script>
+  // Apply tweak data-attributes on load, before React mounts (avoids flash).
+  (function () {
+    try {
+      var d = window.TWEAK_DEFAULTS || {};
+      var r = document.documentElement;
+      r.setAttribute("data-palette", d.palette || "cocoa");
+      r.setAttribute("data-svc", d.svc || "four");
+      r.setAttribute("data-bullets", d.bullets === false ? "off" : "on");
+      r.setAttribute("data-portrait", d.portrait || "bw");
+      r.setAttribute("data-clients", d.clients || "strip");
+    } catch (e) {}
+  })();
+</script>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="site-tweaks.jsx"></script>
+
+</body>
+</html>
