@@ -644,13 +644,15 @@ html[data-clients="twocol"] .company { font-size: clamp(1.2rem, 1.8vw, 1.6rem); 
 .spectrum {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: auto auto auto;
   border-top: 1px solid var(--border);
 }
 .scol {
   padding: 1.85rem 1.5rem 0;
   border-right: 1px solid var(--hairline);
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 3;
 }
 .scol:first-child { padding-left: 0; }
 .scol:last-child { border-right: none; padding-right: 0; }
@@ -702,9 +704,17 @@ html[data-clients="twocol"] .company { font-size: clamp(1.2rem, 1.8vw, 1.6rem); 
 }
 .s-detail { display: flex; flex-direction: column; }
 .proof {
-  margin-top: auto;
   padding-top: 1.25rem;
   border-top: 1px solid var(--hairline);
+  align-self: start;
+}
+.proof .plbl {
+  font-family: "DM Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--tertiary);
+  margin-bottom: 0.6rem;
 }
 .proof .pnum {
   font-family: "Source Serif 4", serif;
@@ -1139,6 +1149,7 @@ footer p {
         </ul>
         </div>
         <div class="proof">
+          <div class="plbl">Focus time</div>
           <div class="pnum">26% &rarr; 66%</div>
           <p class="ptext">Designer focus time per work week, at PayPal.</p>
         </div>
@@ -1159,6 +1170,7 @@ footer p {
         </ul>
         </div>
         <div class="proof">
+          <div class="plbl">Org adoption</div>
           <div class="pnum">300-person</div>
           <p class="ptext">Org-wide ways of working standard, built and adopted.</p>
         </div>
@@ -1179,6 +1191,7 @@ footer p {
         </ul>
         </div>
         <div class="proof">
+          <div class="plbl">Time saved</div>
           <div class="pnum">~80%</div>
           <p class="ptext">Time saved across 8 pilots in 6 months. First AI tool cleared by legal, risk, and compliance.</p>
         </div>
@@ -1199,6 +1212,7 @@ footer p {
         </ul>
         </div>
         <div class="proof">
+          <div class="plbl">Team engagement</div>
           <div class="pnum">72% &rarr; 89%</div>
           <p class="ptext">Engagement during 3x scale. Design ops built 0 to 1 at Etsy.</p>
         </div>
