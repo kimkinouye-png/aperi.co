@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en" data-palette="cocoa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Services — Kim Inouye</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..600&family=DM+Sans:opsz,wght@9..40,300..600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root,
+html[data-palette="cocoa"] {
+  --bg:        oklch(0.150 0.018 52);
+  --bg-rise:   oklch(0.202 0.017 52);
+  --text:      oklch(0.944 0.029 70);
+  --secondary: oklch(0.662 0.022 66);
+  --tertiary:  oklch(0.592 0.018 62);
+  --border:    oklch(0.300 0.016 60);
+  --hairline:  oklch(0.256 0.013 60);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: "DM Sans", system-ui, sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.65;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+h1, h2, h3, h4 {
+  font-family: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  font-weight: 400;
+  color: var(--text);
+  letter-spacing: -0.012em;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+p { text-wrap: pretty; }
+
+.shell { max-width: 1120px; margin: 0 auto; padding: 0 clamp(1.5rem, 4vw, 3.5rem); }
+
+nav.topnav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 50;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem clamp(1.5rem, 4vw, 3.5rem);
+  background: color-mix(in oklab, var(--bg) 86%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--hairline);
+}
+nav.topnav .mark {
+  font-family: "DM Mono", monospace;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  color: var(--text);
+  text-decoration: none;
+}
+nav.topnav .back {
+  font-family: "DM Mono", monospace;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text);
+  text-decoration: none;
+  opacity: 0.85;
+  transition: opacity 200ms ease;
+}
+nav.topnav .back:hover { opacity: 1; }
+
+.kicker {
+  font-family: "DM Mono", monospace;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text);
+  margin-bottom: 2.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  opacity: 0.85;
+}
+.kicker::before { content: ""; width: 28px; height: 1px; background: var(--border); display: inline-block; }
+
+/* Header */
+.page-head { padding: clamp(7.5rem, 12vw, 11rem) 0 clamp(3rem, 5vw, 4.5rem); }
+.page-title {
+  font-size: clamp(2.75rem, 6vw, 5rem);
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+  margin-bottom: 1.75rem;
+  max-width: 16ch;
+}
+.page-title em { font-style: italic; color: var(--secondary); font-weight: 300; }
+.page-lede {
+  font-size: clamp(1.125rem, 1.4vw, 1.35rem);
+  line-height: 1.65;
+  color: var(--secondary);
+  max-width: 52ch;
+}
+
+/* Service block */
+.svc {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.85fr) 2fr;
+  gap: clamp(2rem, 5vw, 5rem);
+  padding: clamp(3.5rem, 6vw, 5.5rem) 0;
+  border-top: 1px solid var(--hairline);
+}
+.svc-id { position: sticky; top: 6.5rem; align-self: start; }
+.meter { display: flex; gap: 4px; margin-bottom: 1.25rem; }
+.meter i { width: 18px; height: 3px; background: var(--hairline); display: block; }
+.meter i.on { background: var(--text); }
+.svc-num {
+  font-family: "DM Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  color: var(--tertiary);
+  margin-bottom: 0.7rem;
+}
+.svc-name {
+  font-size: clamp(1.6rem, 2.4vw, 2.1rem);
+  line-height: 1.12;
+  letter-spacing: -0.018em;
+  margin-bottom: 0.9rem;
+}
+.svc-one {
+  font-family: "Source Serif 4", serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1.05rem, 1.3vw, 1.25rem);
+  color: var(--secondary);
+  line-height: 1.45;
+  max-width: 26ch;
+}
+
+.svc-body { display: flex; flex-direction: column; gap: clamp(2rem, 3vw, 2.75rem); }
+.group + .group { padding-top: clamp(2rem, 3vw, 2.75rem); border-top: 1px solid var(--hairline); }
+.group-label {
+  font-family: "DM Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--tertiary);
+  margin-bottom: 1.1rem;
+}
+
+/* Problem = quoted client voice */
+.quotes { display: flex; flex-direction: column; gap: 0.85rem; }
+.quotes li {
+  list-style: none;
+  position: relative;
+  padding-left: 1.5rem;
+  font-family: "Source Serif 4", serif;
+  font-style: italic;
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+.quotes li::before {
+  content: "\201C";
+  position: absolute;
+  left: 0;
+  top: -0.05em;
+  font-size: 1.4rem;
+  color: var(--tertiary);
+  font-style: normal;
+}
+
+/* Plain dash lists (What I do, Artifacts) */
+.dlist { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+.dlist li {
+  position: relative;
+  padding-left: 1.4rem;
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--text);
+}
+.dlist.muted li { color: var(--secondary); }
+.dlist li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.7em;
+  width: 12px;
+  height: 1px;
+  background: var(--tertiary);
+}
+
+/* Sub-groups (service 03) */
+.subgroup + .subgroup { margin-top: 1.75rem; }
+.subgroup-title {
+  font-family: "Source Serif 4", serif;
+  font-style: italic;
+  font-size: 1.2rem;
+  color: var(--text);
+  margin-bottom: 0.9rem;
+}
+
+/* Proof */
+.proof-block {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.proof-item {
+  display: flex;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--hairline);
+}
+.proof-item:last-child { border-bottom: none; }
+.proof-item .pn {
+  font-family: "Source Serif 4", serif;
+  font-weight: 300;
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  white-space: nowrap;
+}
+.proof-item .pt { font-size: 0.98rem; line-height: 1.5; color: var(--secondary); }
+
+/* CTA */
+.cta {
+  padding: clamp(4rem, 7vw, 6.5rem) 0 clamp(6rem, 9vw, 8rem);
+  border-top: 1px solid var(--hairline);
+}
+.cta h2 { font-size: clamp(2rem, 3.6vw, 3.25rem); letter-spacing: -0.02em; margin-bottom: 1.5rem; max-width: 18ch; }
+.cta h2 em { font-style: italic; color: var(--secondary); font-weight: 300; }
+.cta a {
+  display: inline-block;
+  font-family: "DM Sans", sans-serif;
+  font-weight: 600;
+  font-size: 1.0625rem;
+  color: var(--bg);
+  background: var(--text);
+  border: 1px solid var(--text);
+  padding: 0.95rem 1.6rem;
+  text-decoration: none;
+  transition: opacity 200ms ease;
+}
+.cta a:hover { opacity: 0.85; }
+
+/* Newsletter band */
+.news {
+  padding: clamp(3.5rem, 6vw, 5.5rem) 0;
+  border-top: 1px solid var(--hairline);
+}
+.news h2 { font-size: clamp(1.75rem, 3vw, 2.6rem); letter-spacing: -0.02em; margin-bottom: 1rem; max-width: 18ch; }
+.news h2 em { font-style: italic; color: var(--secondary); font-weight: 300; }
+.news p.lede { font-size: 1.1rem; line-height: 1.65; color: var(--secondary); max-width: 48ch; margin-bottom: 2rem; }
+.news-form { display: flex; gap: 0.75rem; max-width: 32rem; flex-wrap: wrap; }
+.news-form input {
+  flex: 1 1 16rem;
+  font-family: "DM Sans", sans-serif;
+  font-size: 1.0625rem;
+  color: var(--text);
+  background: var(--bg-rise);
+  border: 1px solid var(--border);
+  padding: 0.95rem 1rem;
+  transition: border-color 200ms ease;
+}
+.news-form input::placeholder { color: var(--tertiary); }
+.news-form input:focus { outline: none; border-color: var(--text); }
+.news-form button {
+  font-family: "DM Sans", sans-serif;
+  font-weight: 600;
+  font-size: 1.0625rem;
+  color: var(--bg);
+  background: var(--text);
+  border: 1px solid var(--text);
+  padding: 0.95rem 1.5rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 200ms ease;
+}
+.news-form button:hover { opacity: 0.85; }
+.news-foot { font-family: "DM Mono", monospace; font-size: 12px; letter-spacing: 0.06em; color: var(--tertiary); margin-top: 1.25rem; }
+
+footer {
+  border-top: 1px solid var(--hairline);
+  padding: 2.5rem 0;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-family: "DM Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--tertiary);
+}
+
+@media (max-width: 820px) {
+  .svc { grid-template-columns: 1fr; gap: 2rem; }
+  .svc-id { position: static; }
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="mark" href="index.html#top">KIM&nbsp;INOUYE</a>
+  <a class="back" href="index.html#services">&larr; Back to site</a>
+</nav>
+
+<div class="shell">
+
+  <header class="page-head" data-screen-label="Services detail — Header">
+    <div class="kicker">Services in detail</div>
+    <h1 class="page-title">Ways to <em>work together.</em></h1>
+    <p class="page-lede">Four engagements on a spectrum, from a two-week diagnostic to fractional leadership. Each one is structured the same way: the problem in your words, what I actually do, and the artifacts you keep.</p>
+  </header>
+
+  <!-- 01 -->
+  <section class="svc" data-screen-label="01 Operational diagnostic">
+    <div class="svc-id">
+      <div class="meter"><i class="on"></i><i></i><i></i><i></i></div>
+      <div class="svc-num">01</div>
+      <h2 class="svc-name">Operational diagnostic</h2>
+      <p class="svc-one">Find where the work breaks before you spend on a fix.</p>
+    </div>
+    <div class="svc-body">
+      <div class="group">
+        <div class="group-label">Problem &mdash; how the client says it</div>
+        <ul class="quotes">
+          <li>Designers spend too much time in meetings.</li>
+          <li>Pods are in constant swirl, no clear action plan.</li>
+          <li>Stakeholders do not have transparency.</li>
+          <li>Stakeholders complain about not having design or requirements on time.</li>
+          <li>Engineering complains that files are not handoff ready.</li>
+          <li>Leadership can&rsquo;t see who is working on what.</li>
+          <li>Can the current team fulfill this roadmap?</li>
+          <li>Do we have enough designers to execute?</li>
+          <li>When is this design going to be done?</li>
+        </ul>
+      </div>
+      <div class="group">
+        <div class="group-label">What I do</div>
+        <ul class="dlist">
+          <li>Observe how teams work and catalogue their tools and methods end to end.</li>
+          <li>Pull metrics, or identify proxies, to measure success.</li>
+          <li>Map where your team&rsquo;s workflows break.</li>
+          <li>Create a numbers-driven action plan to solve problem areas.</li>
+          <li>Implement solutions.</li>
+          <li>Track success.</li>
+        </ul>
+      </div>
+      <div class="group">
+        <div class="group-label">Artifacts</div>
+        <ul class="dlist muted">
+          <li>Mapping of the team&rsquo;s workflows</li>
+          <li>Points of leakage where teams waste cycles</li>
+          <li>Prioritized recommendations and action plan</li>
+          <li>Measurement plan and template</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 -->
+  <section class="svc" data-screen-label="02 Ways of working setup">
+    <div class="svc-id">
+      <div class="meter"><i class="on"></i><i class="on"></i><i></i><i></i></div>
+      <div class="svc-num">02</div>
+      <h2 class="svc-name">Ways of working setup</h2>
+      <p class="svc-one">Intake, rhythms, and tooling configuration.</p>
+    </div>
+    <div class="svc-body">
+      <div class="group">
+        <div class="group-label">Problem &mdash; how the client says it</div>
+        <ul class="quotes">
+          <li>We bought Asana (or Jira), but no one uses it the same way, or at all.</li>
+          <li>Requests come from everywhere: Slack, hallway, email. They all turn into design work.</li>
+          <li>I can&rsquo;t tell what my team is actually working on, or whether it&rsquo;s the right work.</li>
+          <li>Designers can&rsquo;t say no, so they&rsquo;re buried and there&rsquo;s no process to point to.</li>
+          <li>We keep adding meetings but nothing feels more aligned.</li>
+          <li>There&rsquo;s no shared definition of when work is ready to start, or when it&rsquo;s done.</li>
+          <li>Reviews happen ad hoc and decisions don&rsquo;t stick.</li>
+          <li>Onboarding a new hire takes forever because none of this is written down.</li>
+        </ul>
+      </div>
+      <div class="group">
+        <div class="group-label">What I do</div>
+        <ul class="dlist">
+          <li>Design a single intake process with a definition-of-ready gate, so undefined work can&rsquo;t enter the queue.</li>
+          <li>Build the system of record inside your existing tools, so leadership can see who is working on what in one view.</li>
+          <li>Set up the operating rhythms &mdash; prioritization, design reviews, documentation, reporting &mdash; on a cadence built around how your team already works.</li>
+          <li>Roll rhythms out incrementally, one team at a time, starting with the team most ready for structure.</li>
+          <li>Run the system myself in the first weeks to prove value, then hand ownership to the team.</li>
+          <li>Define the workstream taxonomy, a sizing and resourcing method, and milestones.</li>
+          <li>Configure the tooling and integrations (Asana, Jira, Slack, Confluence, Figma).</li>
+        </ul>
+      </div>
+      <div class="group">
+        <div class="group-label">Artifacts</div>
+        <ul class="dlist muted">
+          <li>Intake process with a definition-of-ready gate</li>
+          <li>System of record configured in your tools, with leadership portfolio views</li>
+          <li>Rhythm map: cadence, objective, and output for each meeting and ritual</li>
+          <li>Workstream taxonomy plus a sizing and resourcing method</li>
+          <li>Documentation and reporting templates</li>
+          <li>A short guide so the system survives onboarding and handoff</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 -->
+  <section class="svc" data-screen-label="03 AI transformation and adoption">
+    <div class="svc-id">
+      <div class="meter"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+      <div class="svc-num">03</div>
+      <h2 class="svc-name">AI transformation and adoption</h2>
+      <p class="svc-one">An operating model for AI that actually gets used.</p>
+    </div>
+    <div class="svc-body">
+      <div class="group">
+        <div class="group-label">Problem &mdash; how the client says it</div>
+        <ul class="quotes">
+          <li>We feel like we&rsquo;re behind on AI and everyone else has figured it out.</li>
+          <li>Leadership handed us a mandate to use AI to move faster, but no one defined what faster means or how we&rsquo;d know it worked.</li>
+          <li>Our process hasn&rsquo;t actually changed. We&rsquo;ve added AI tools on top of the same old workflow.</li>
+          <li>AI usage is all over the map. Some people are deep in it, others have never opened a tool.</li>
+          <li>We&rsquo;re buying tools, but adoption stalls after the demo.</li>
+          <li>People are nervous the change means their job, so they quietly opt out.</li>
+          <li>Legal, risk, and compliance keep blocking the tools people actually want.</li>
+          <li>Pilots happen, then quietly die when the person running them gets busy.</li>
+        </ul>
+      </div>
+      <div class="group">
+        <div class="group-label">What I do</div>
+        <div class="subgroup">
+          <div class="subgroup-title">Transformation: reinventing the PDLC</div>
+          <ul class="dlist">
+            <li>Define what acceleration means for your org before anyone touches a tool, broken down across your product development lifecycle.</li>
+            <li>Diagnose real friction through workshops and surveys, then redesign the lifecycle phases where AI changes the work &mdash; not just speeds up the old version of it.</li>
+            <li>Build a portfolio of pilots: sure-thing wins paired with riskier bets, with baselines and KPIs so each one proves or disproves itself.</li>
+          </ul>
+        </div>
+        <div class="subgroup">
+          <div class="subgroup-title">Adoption and change management</div>
+          <ul class="dlist">
+            <li>Attach the AI mandate to pain people already feel, so the change is something they want rather than something done to them.</li>
+            <li>Drive adoption one incentive at a time, mapping why each person and their manager would trade hours for the new way of working.</li>
+            <li>Handle the change management: communication, addressing the job-security fear directly, and bringing managers in early so the shift sticks.</li>
+            <li>Navigate legal, risk, and compliance to get tools cleared for real use, through to general counsel sign-off.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="group">
+        <div class="group-label">Artifacts</div>
+        <ul class="dlist muted">
+          <li>A definition of what AI is accelerating, mapped to your redesigned lifecycle phases</li>
+          <li>Friction diagnostic from workshops and surveys</li>
+          <li>Pilot portfolio with prioritization (effort vs. return) and per-pilot measurement plans</li>
+          <li>Adoption and incentive map by stakeholder</li>
+          <li>Change management plan: comms, manager enablement, escalation path</li>
+          <li>Governance and legal-clearance path documented for repeat use</li>
+        </ul>
+      </div>
+      <div class="group">
+        <div class="group-label">Proof</div>
+        <div class="proof-block">
+          <div class="proof-item">
+            <span class="pn">~80%</span>
+            <span class="pt">Time saved across pilots in 6 months.</span>
+          </div>
+          <div class="proof-item">
+            <span class="pn">1st</span>
+            <span class="pt">AI tool cleared through full legal, risk, and compliance review to general counsel sign-off.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 -->
+  <section class="svc" data-screen-label="04 Fractional / interim ops leadership">
+    <div class="svc-id">
+      <div class="meter"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div>
+      <div class="svc-num">04</div>
+      <h2 class="svc-name">Fractional / interim ops leadership</h2>
+      <p class="svc-one">Run your ops function while you scale or decide whether to hire.</p>
+    </div>
+    <div class="svc-body">
+      <div class="group">
+        <div class="group-label">Problem &mdash; how the client says it</div>
+        <ul class="quotes">
+          <li>We need senior ops leadership now, but we&rsquo;re not ready to commit to a full-time hire.</li>
+          <li>We&rsquo;re scaling fast and the operational cracks are starting to show, but there&rsquo;s no one whose job this is.</li>
+          <li>Our last ops leader left and work is falling through the gaps until we backfill.</li>
+          <li>We don&rsquo;t actually know what to hire for yet. We need someone to define the role before we fill it.</li>
+          <li>Leadership is spending time on operational firefighting instead of strategy.</li>
+          <li>We have the budget for a fraction of a senior person, not a whole one.</li>
+        </ul>
+      </div>
+      <div class="group">
+        <div class="group-label">What I do</div>
+        <ul class="dlist">
+          <li>Step in and run your ops function directly: planning, rhythms, resource allocation, and the day-to-day operating layer.</li>
+          <li>Build the operating system while I&rsquo;m running it, so you&rsquo;re not just renting coverage &mdash; you&rsquo;re left with infrastructure that lasts.</li>
+          <li>Define what the permanent role should actually be, so when you hire, you hire against a real spec instead of a guess.</li>
+          <li>Absorb the operational firefighting so leadership gets its time back for strategy.</li>
+          <li>Scale the function as you grow, then either hand it to a full-time hire or taper out on a defined timeline.</li>
+          <li>Keep the work legible to leadership throughout, so there&rsquo;s no black box when I leave.</li>
+        </ul>
+      </div>
+      <div class="group">
+        <div class="group-label">Artifacts</div>
+        <ul class="dlist muted">
+          <li>A running ops function: planning cadence, operating rhythms, and a system of record</li>
+          <li>A defined spec for the permanent ops role, so hiring is against a real job, not a guess</li>
+          <li>Capacity and resourcing model leadership can run without you</li>
+          <li>Documentation and handoff plan so the function survives the transition</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="news" data-screen-label="Newsletter">
+    <div class="kicker">Newsletter</div>
+    <h2>Notes from inside the <em>operating system.</em></h2>
+    <p class="lede">I write about AI in operations &mdash; a running journal of experiments making ops teams 10x more effective.</p>
+    <form class="news-form" id="news-form">
+      <input type="email" id="news-email" name="email" placeholder="me@gmail.com" required autocomplete="email" aria-label="Email address">
+      <button type="submit">Subscribe</button>
+    </form>
+    <p class="news-foot">Free on Substack &middot; No spam, unsubscribe anytime.</p>
+  </section>
+
+  <section class="cta" data-screen-label="CTA">
+    <h2>Tell me where the work is <em>getting stuck.</em></h2>
+    <a href="index.html#contact">Start a conversation</a>
+  </section>
+
+  <footer>
+    <p>&copy; 2026 Aperi LLC &middot; Chicago, IL</p>
+    <p>Kim Inouye, founder &amp; principal</p>
+  </footer>
+
+</div>
+
+<script>
+  (function () {
+    var nf = document.getElementById("news-form");
+    if (!nf) return;
+    nf.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var email = document.getElementById("news-email").value.trim();
+      var base = "https://kkinouye.substack.com/subscribe";
+      var url = email ? base + "?email=" + encodeURIComponent(email) : base;
+      window.open(url, "_blank", "noopener");
+    });
+  })();
+</script>
+
+</body>
+</html>

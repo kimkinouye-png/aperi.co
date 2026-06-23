@@ -644,15 +644,13 @@ html[data-clients="twocol"] .company { font-size: clamp(1.2rem, 1.8vw, 1.6rem); 
 .spectrum {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: auto auto auto;
   border-top: 1px solid var(--border);
 }
 .scol {
   padding: 1.85rem 1.5rem 0;
   border-right: 1px solid var(--hairline);
-  display: grid;
-  grid-template-rows: subgrid;
-  grid-row: span 3;
+  display: flex;
+  flex-direction: column;
 }
 .scol:first-child { padding-left: 0; }
 .scol:last-child { border-right: none; padding-right: 0; }
@@ -672,12 +670,14 @@ html[data-clients="twocol"] .company { font-size: clamp(1.2rem, 1.8vw, 1.6rem); 
   line-height: 1.15;
   letter-spacing: -0.012em;
   margin-bottom: 0.85rem;
+  min-height: 2.3em;
 }
 .sdesc {
   font-size: 1rem;
   line-height: 1.6;
   color: var(--text);
   margin-bottom: 1.1rem;
+  min-height: 4.8em;
 }
 .sbullets {
   list-style: none;
@@ -703,18 +703,35 @@ html[data-clients="twocol"] .company { font-size: clamp(1.2rem, 1.8vw, 1.6rem); 
   background: var(--tertiary);
 }
 .s-detail { display: flex; flex-direction: column; }
+.svc-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: clamp(2.5rem, 4vw, 3.5rem);
+  font-family: "DM Mono", monospace;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.4rem;
+  transition: border-color 200ms ease, gap 200ms ease;
+}
+.svc-more:hover { border-bottom-color: var(--text); gap: 0.9rem; }
 .proof {
+  margin-top: 0;
   padding-top: 1.25rem;
   border-top: 1px solid var(--hairline);
-  align-self: start;
 }
-.proof .plbl {
+.proof .plabel {
   font-family: "DM Mono", monospace;
   font-size: 12px;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--tertiary);
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.85rem;
 }
 .proof .pnum {
   font-family: "Source Serif 4", serif;
@@ -1063,6 +1080,187 @@ html[data-portrait="soft"] .hero-photo img { filter: grayscale(0.45) contrast(1)
   letter-spacing: -0.02em;
 }
 
+/* ---- Contact form ---- */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 32rem;
+}
+.field { display: flex; flex-direction: column; gap: 0.55rem; }
+.field label {
+  font-family: "DM Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--secondary);
+}
+.field label .req { color: var(--tertiary); text-transform: none; letter-spacing: 0; }
+.field input,
+.field textarea {
+  font-family: "DM Sans", sans-serif;
+  font-size: 1.0625rem;
+  color: var(--text);
+  background: var(--bg-rise);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  padding: 0.85rem 1rem;
+  width: 100%;
+  transition: border-color 200ms ease;
+}
+.field textarea { resize: vertical; min-height: 8.5rem; line-height: 1.6; }
+.field input::placeholder,
+.field textarea::placeholder { color: var(--tertiary); }
+.field input:focus,
+.field textarea:focus { outline: none; border-color: var(--text); }
+.form-submit {
+  font-family: "DM Sans", sans-serif;
+  font-weight: 600;
+  font-size: 1.0625rem;
+  letter-spacing: -0.01em;
+  color: var(--bg);
+  background: var(--text);
+  border: 1px solid var(--text);
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  transition: opacity 200ms ease;
+}
+.form-submit:hover { opacity: 0.85; }
+.form-note {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--secondary);
+}
+.form-note.ok { color: var(--text); }
+
+/* ---- Newsletter nav button + dropdown ---- */
+.nav-news-btn {
+  font-family: "DM Mono", monospace;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: opacity 200ms ease;
+}
+.nav-news-btn:hover, .nav-news-btn[aria-expanded="true"] { opacity: 1; }
+
+.news-pop {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: clamp(1.5rem, 4vw, 3.5rem);
+  width: min(26rem, calc(100vw - 3rem));
+  background: var(--bg-rise);
+  border: 1px solid var(--border);
+  padding: 1.75rem;
+  box-shadow: 0 24px 60px -20px rgba(0,0,0,0.65);
+  transform-origin: top right;
+  z-index: 60;
+}
+.news-pop[hidden] { display: none; }
+.news-pop.open { animation: newsDrop 220ms cubic-bezier(0.16, 1, 0.3, 1); }
+@keyframes newsDrop {
+  from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.news-pop-kicker {
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--tertiary);
+  margin-bottom: 0.9rem;
+}
+.news-pop-title {
+  font-family: "Source Serif 4", serif;
+  font-size: 1.5rem;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  margin-bottom: 0.75rem;
+}
+.news-pop-title em { font-style: italic; color: var(--secondary); font-weight: 300; }
+.news-pop-body {
+  font-size: 0.975rem;
+  line-height: 1.55;
+  color: var(--secondary);
+  margin-bottom: 1.5rem;
+}
+.news-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  background: transparent;
+}
+.news-scrim[hidden] { display: none; }
+
+.news-form { display: flex; flex-direction: column; gap: 0.6rem; }
+.news-form input {
+  font-family: "DM Sans", sans-serif;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  padding: 0.85rem 1rem;
+  transition: border-color 200ms ease;
+}
+.news-form input::placeholder { color: var(--tertiary); }
+.news-form input:focus { outline: none; border-color: var(--text); }
+.news-form button {
+  font-family: "DM Sans", sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+  color: var(--bg);
+  background: var(--text);
+  border: 1px solid var(--text);
+  padding: 0.85rem 1rem;
+  cursor: pointer;
+  transition: opacity 200ms ease;
+}
+.news-form button:hover { opacity: 0.85; }
+.news-foot {
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: var(--tertiary);
+  margin-top: 1rem;
+}
+@media (max-width: 720px) {
+  .news-pop { right: 1rem; left: 1rem; width: auto; }
+}
+
+/* Contact dropdown — wider, hosts the full form */
+.contact-pop { width: min(30rem, calc(100vw - 3rem)); }
+.contact-pop .news-pop-title { margin-bottom: 1.5rem; }
+.pop-form { gap: 1.1rem; }
+.pop-form .field { gap: 0.5rem; }
+.pop-form textarea { min-height: 6rem; }
+.pop-form .form-submit { margin-top: 0.25rem; }
+
+.contact-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-family: "DM Sans", sans-serif;
+  font-weight: 600;
+  font-size: 1.0625rem;
+  letter-spacing: -0.01em;
+  color: var(--bg);
+  background: var(--text);
+  border: 1px solid var(--text);
+  padding: 1rem 1.75rem;
+  cursor: pointer;
+  transition: opacity 200ms ease, gap 200ms ease;
+}
+.contact-cta:hover { opacity: 0.9; gap: 1rem; }
+
 /* ============================================================
    Footer
    ============================================================ */
@@ -1098,9 +1296,45 @@ footer p {
   <ul class="nav-links">
     <li><a href="#services">Services</a></li>
     <li><a href="#clients">Clients</a></li>
-    <li><a href="#contact">Contact</a></li>
+    <li><button type="button" class="nav-news-btn" id="news-trigger" aria-expanded="false" aria-controls="news-pop">Newsletter</button></li>
+    <li><button type="button" class="nav-news-btn" id="contact-trigger" aria-expanded="false" aria-controls="contact-pop">Contact</button></li>
   </ul>
+
+  <!-- Newsletter dropdown -->
+  <div class="news-pop" id="news-pop" role="dialog" aria-modal="false" aria-label="Subscribe to the newsletter" hidden>
+    <div class="news-pop-kicker">Newsletter</div>
+    <h3 class="news-pop-title">Notes from inside the <em>operating system.</em></h3>
+    <p class="news-pop-body">AI in operations &mdash; a running journal of experiments making ops teams 10x more effective.</p>
+    <form class="news-form" id="news-form">
+      <input type="email" id="news-email" name="email" placeholder="me@gmail.com" required autocomplete="email" aria-label="Email address">
+      <button type="submit">Subscribe</button>
+    </form>
+    <p class="news-foot">Free on Substack &middot; No spam, unsubscribe anytime.</p>
+  </div>
+
+  <!-- Contact dropdown -->
+  <div class="news-pop contact-pop" id="contact-pop" role="dialog" aria-modal="false" aria-label="Contact Kim" hidden>
+    <div class="news-pop-kicker">Contact</div>
+    <h3 class="news-pop-title">Tell me where the work is <em>getting stuck.</em></h3>
+    <form class="contact-form pop-form" id="contact-pop-form">
+      <div class="field">
+        <label for="cd-name">Name</label>
+        <input type="text" id="cd-name" name="name" placeholder="Jane Smith" autocomplete="name">
+      </div>
+      <div class="field">
+        <label for="cd-email">Email <span class="req">(required)</span></label>
+        <input type="email" id="cd-email" name="email" placeholder="me@gmail.com" required autocomplete="email">
+      </div>
+      <div class="field">
+        <label for="cd-message">Message</label>
+        <textarea id="cd-message" name="message" placeholder="I&rsquo;d like to ask about&hellip;"></textarea>
+      </div>
+      <button type="submit" class="form-submit">Submit</button>
+      <p class="form-note" id="cd-note" hidden></p>
+    </form>
+  </div>
 </nav>
+<div class="news-scrim" id="news-scrim" hidden></div>
 
 <div class="shell" id="top">
 
@@ -1114,8 +1348,7 @@ footer p {
         <p class="hero-proof">Helping leaders scale design and product teams</p>
         <div class="hero-links">
           <a href="#services">Services</a>
-          <a href="https://www.linkedin.com/in/product-design-operations/" target="_blank" rel="noopener">LinkedIn</a>
-          <a href="mailto:kim@aperi.co">Email</a>
+          <a href="#contact">Contact</a>
         </div>
       </div>
       <div class="hero-photo">
@@ -1142,14 +1375,9 @@ footer p {
         </div>
         <div class="s-detail">
         <p class="sdesc">Find where the work breaks before you spend on a fix.</p>
-        <ul class="sbullets">
-          <li>Time and workflow audit</li>
-          <li>Bottleneck map</li>
-          <li>Prioritized fix list</li>
-        </ul>
         </div>
         <div class="proof">
-          <div class="plbl">Focus time</div>
+          <div class="plabel">Focus time</div>
           <div class="pnum">26% &rarr; 66%</div>
           <p class="ptext">Designer focus time per work week, at PayPal.</p>
         </div>
@@ -1162,15 +1390,9 @@ footer p {
         </div>
         <div class="s-detail">
         <p class="sdesc">Intake, rhythms, and tooling configuration.</p>
-        <ul class="sbullets">
-          <li>Intake and triage process</li>
-          <li>Planning, tracking, and reporting</li>
-          <li>Communications strategy</li>
-          <li>Workflow automation</li>
-        </ul>
         </div>
         <div class="proof">
-          <div class="plbl">Org adoption</div>
+          <div class="plabel">Org adoption</div>
           <div class="pnum">300-person</div>
           <p class="ptext">Org-wide ways of working standard, built and adopted.</p>
         </div>
@@ -1179,19 +1401,13 @@ footer p {
         <div class="s-id">
           <div class="meter"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
           <div class="snum">03</div>
-          <div class="sname">AI adoption advisory</div>
+          <div class="sname">AI transformation and adoption</div>
         </div>
         <div class="s-detail">
         <p class="sdesc">An operating model for AI that actually gets used.</p>
-        <ul class="sbullets">
-          <li>AI strategy &amp; enablement</li>
-          <li>Pilot design and rollout</li>
-          <li>Measurement planning and tracking</li>
-          <li>Business case development</li>
-        </ul>
         </div>
         <div class="proof">
-          <div class="plbl">Time saved</div>
+          <div class="plabel">Time saved</div>
           <div class="pnum">~80%</div>
           <p class="ptext">Time saved across 8 pilots in 6 months. First AI tool cleared by legal, risk, and compliance.</p>
         </div>
@@ -1204,20 +1420,15 @@ footer p {
         </div>
         <div class="s-detail">
         <p class="sdesc">Run your ops function while you scale or decide whether to hire.</p>
-        <ul class="sbullets">
-          <li>Embedded ops leadership</li>
-          <li>Budget and vendor management</li>
-          <li>Program management</li>
-          <li>Culture and L&amp;D management</li>
-        </ul>
         </div>
         <div class="proof">
-          <div class="plbl">Team engagement</div>
+          <div class="plabel">Team engagement</div>
           <div class="pnum">72% &rarr; 89%</div>
           <p class="ptext">Engagement during 3x scale. Design ops built 0 to 1 at Etsy.</p>
         </div>
       </div>
     </div>
+    <a class="svc-more" href="services.html">See the full breakdown <span aria-hidden="true">&rarr;</span></a>
   </section>
 
 
@@ -1272,12 +1483,7 @@ footer p {
     <div class="kicker">Work together</div>
     <h2 class="contact-headline">Tell me where the work is <em>getting stuck.</em></h2>
     <p class="contact-body">I take on a small number of operations engagements at a time, from a two-week diagnostic to fractional leadership. </p>
-    <div class="icon-row">
-      <a class="icon-btn" href="mailto:kim@aperi.co" aria-label="Email Kim">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5.5" width="18" height="13" rx="1.5"></rect><path d="M3.5 7 L12 13 L20.5 7"></path></svg>
-      </a>
-      <a class="icon-btn" href="https://www.linkedin.com/in/product-design-operations/" target="_blank" rel="noopener" aria-label="Kim on LinkedIn"><span class="li">in</span></a>
-    </div>
+    <button type="button" class="contact-cta" id="contact-open">Get in touch <span aria-hidden="true">&rarr;</span></button>
   </section>
 
   <!-- ===========================  FOOTER  =========================== -->
@@ -1287,9 +1493,6 @@ footer p {
   </footer>
 
 </div>
-
-<!-- Tweaks mount -->
-<div id="tweaks-mount"></div>
 
 <script id="tweak-defaults">
 window.TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
@@ -1316,11 +1519,82 @@ window.TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   })();
 </script>
 
-<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
-<script type="text/babel" src="tweaks-panel.jsx"></script>
-<script type="text/babel" src="site-tweaks.jsx"></script>
+<script>
+  // ---- Shared nav dropdown controller (one panel open at a time) ----
+  (function () {
+    var scrim = document.getElementById("news-scrim");
+    var panels = [];
+
+    function closeAll() {
+      panels.forEach(function (p) {
+        p.pop.hidden = true;
+        p.pop.classList.remove("open");
+        p.triggers.forEach(function (t) { t.setAttribute("aria-expanded", "false"); });
+      });
+      if (scrim) scrim.hidden = true;
+    }
+
+    function register(popId, triggerIds, focusId) {
+      var pop = document.getElementById(popId);
+      if (!pop) return null;
+      var triggers = triggerIds.map(function (id) { return document.getElementById(id); }).filter(Boolean);
+      var entry = { pop: pop, triggers: triggers };
+      function open() {
+        closeAll();
+        pop.hidden = false;
+        if (scrim) scrim.hidden = false;
+        pop.classList.add("open");
+        triggers.forEach(function (t) { t.setAttribute("aria-expanded", "true"); });
+        if (focusId) setTimeout(function () { var f = document.getElementById(focusId); if (f) f.focus(); }, 60);
+      }
+      entry.open = open;
+      triggers.forEach(function (t) {
+        t.addEventListener("click", function () { pop.hidden ? open() : closeAll(); });
+      });
+      panels.push(entry);
+      return entry;
+    }
+
+    var news = register("news-pop", ["news-trigger"], "news-email");
+    var contact = register("contact-pop", ["contact-trigger", "contact-open"], "cd-name");
+
+    if (scrim) scrim.addEventListener("click", closeAll);
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeAll(); });
+
+    // Newsletter submit → Substack
+    var nf = document.getElementById("news-form");
+    if (nf) nf.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var email = document.getElementById("news-email").value.trim();
+      var base = "https://kkinouye.substack.com/subscribe";
+      window.open(email ? base + "?email=" + encodeURIComponent(email) : base, "_blank", "noopener");
+      closeAll();
+    });
+
+    // Contact submit → pre-filled email
+    var cf = document.getElementById("contact-pop-form");
+    if (cf) cf.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var name = document.getElementById("cd-name").value.trim();
+      var email = document.getElementById("cd-email").value.trim();
+      var message = document.getElementById("cd-message").value.trim();
+      var note = document.getElementById("cd-note");
+      if (!email) {
+        note.hidden = false; note.className = "form-note";
+        note.textContent = "Please add your email so I can reply.";
+        return;
+      }
+      var bodyLines = [];
+      if (name) bodyLines.push("Name: " + name);
+      bodyLines.push("Email: " + email, "", message);
+      window.location.href = "mailto:kim@aperi.co?subject=" +
+        encodeURIComponent("Inquiry from " + (name || "your site")) +
+        "&body=" + encodeURIComponent(bodyLines.join("\n"));
+      note.hidden = false; note.className = "form-note ok";
+      note.textContent = "Thanks, " + (name || "") + ". Your email app should open.";
+    });
+  })();
+</script>
 
 </body>
 </html>
