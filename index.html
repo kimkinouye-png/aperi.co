@@ -1192,9 +1192,12 @@ html[data-portrait="soft"] .hero-photo img { filter: grayscale(0.45) contrast(1)
   margin-bottom: 1.5rem;
 }
 .news-scrim {
+  /* Must sit below nav.topnav (z-index: 50) so the nav's absolutely-positioned
+     dropdown children remain clickable. Above .shell (z-index: 1) so clicks on
+     the page body still register as outside-clicks and close the panel. */
   position: fixed;
   inset: 0;
-  z-index: 55;
+  z-index: 40;
   background: transparent;
 }
 .news-scrim[hidden] { display: none; }
@@ -1309,6 +1312,7 @@ footer p {
       <input type="email" id="news-email" name="email" placeholder="me@gmail.com" required autocomplete="email" aria-label="Email address">
       <button type="submit">Subscribe</button>
     </form>
+    <p class="form-note" id="news-note" hidden></p>
     <p class="news-foot">Free on Substack &middot; No spam, unsubscribe anytime.</p>
   </div>
 
@@ -1561,37 +1565,72 @@ window.TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
     if (scrim) scrim.addEventListener("click", closeAll);
     document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeAll(); });
 
-    // Newsletter submit → Substack
+    // Newsletter submit: capture to Formspree, then hand off to Substack in a new tab.
     var nf = document.getElementById("news-form");
     if (nf) nf.addEventListener("submit", function (e) {
       e.preventDefault();
-      var email = document.getElementById("news-email").value.trim();
-      var base = "https://kkinouye.substack.com/subscribe";
-      window.open(email ? base + "?email=" + encodeURIComponent(email) : base, "_blank", "noopener");
-      closeAll();
+      var emailInput = document.getElementById("news-email");
+      var email = (emailInput.value || "").trim();
+      var note = document.getElementById("news-note");
+      if (!email) {
+        if (note) {
+          note.hidden = false;
+          note.className = "form-note";
+          note.textContent = "Please add your email to subscribe.";
+        }
+        emailInput.focus();
+        return;
+      }
+      // Fire-and-forget list capture; do not block Substack handoff on its result.
+      try {
+        fetch("https://formspree.io/f/xnjknejn", {
+          method: "POST",
+          body: new FormData(nf),
+          headers: { "Accept": "application/json" }
+        });
+      } catch (err) {}
+      var substack = "https://kkinouye.substack.com/subscribe?email=" + encodeURIComponent(email);
+      window.open(substack, "_blank", "noopener");
+      if (note) {
+        note.hidden = false;
+        note.className = "form-note ok";
+        note.textContent = "Opening Substack to finish your subscription.";
+      }
     });
 
-    // Contact submit → pre-filled email
+    // Contact submit: POST to Formspree, replace form with confirmation on success.
     var cf = document.getElementById("contact-pop-form");
     if (cf) cf.addEventListener("submit", function (e) {
       e.preventDefault();
-      var name = document.getElementById("cd-name").value.trim();
-      var email = document.getElementById("cd-email").value.trim();
-      var message = document.getElementById("cd-message").value.trim();
+      var emailInput = document.getElementById("cd-email");
+      var email = (emailInput.value || "").trim();
       var note = document.getElementById("cd-note");
       if (!email) {
-        note.hidden = false; note.className = "form-note";
-        note.textContent = "Please add your email so I can reply.";
+        if (note) {
+          note.hidden = false;
+          note.className = "form-note";
+          note.textContent = "Please add your email so I can reply.";
+        }
+        emailInput.focus();
         return;
       }
-      var bodyLines = [];
-      if (name) bodyLines.push("Name: " + name);
-      bodyLines.push("Email: " + email, "", message);
-      window.location.href = "mailto:kim@aperi.co?subject=" +
-        encodeURIComponent("Inquiry from " + (name || "your site")) +
-        "&body=" + encodeURIComponent(bodyLines.join("\n"));
-      note.hidden = false; note.className = "form-note ok";
-      note.textContent = "Thanks, " + (name || "") + ". Your email app should open.";
+      var submitBtn = cf.querySelector("button[type='submit']");
+      if (submitBtn) submitBtn.disabled = true;
+      fetch("https://formspree.io/f/xnjkneqn", {
+        method: "POST",
+        body: new FormData(cf),
+        headers: { "Accept": "application/json" }
+      }).then(function (res) {
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        cf.innerHTML = '<p class="form-note ok">Thanks. Your note is on its way, I will be in touch soon.</p>';
+      }).catch(function () {
+        if (submitBtn) submitBtn.disabled = false;
+        if (note) {
+          note.hidden = false;
+          note.className = "form-note";
+          note.textContent = "Sorry, something went wrong sending that. Please try again, or email kim@aperi.co directly.";
+        }
+      });
     });
   })();
 </script>
