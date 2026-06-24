@@ -751,6 +751,11 @@ html[data-clients="twocol"] .company { font-size: clamp(1.2rem, 1.8vw, 1.6rem); 
   .scol { border-right: none; border-left: none; border-bottom: 1px solid var(--hairline); padding: 1.75rem 0; }
   .scol:last-child { border-bottom: none; }
 }
+/* Mobile declutter: hide commitment axis + proof rows, keep names/descriptions */
+@media (max-width: 720px) {
+  #services .axis { display: none; }
+  #services .proof { display: none; }
+}
 
 /* ---- Tweak-driven variants (data-* on <html>) ---- */
 /* Services layout: "four" (default) | "two" | "rows" */
