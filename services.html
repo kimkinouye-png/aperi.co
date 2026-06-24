@@ -528,17 +528,6 @@ footer {
     </div>
   </section>
 
-  <section class="news" data-screen-label="Newsletter">
-    <div class="kicker">Newsletter</div>
-    <h2>Notes from inside the <em>operating system.</em></h2>
-    <p class="lede">I write about AI in operations &mdash; a running journal of experiments making ops teams 10x more effective.</p>
-    <form class="news-form" id="news-form">
-      <input type="email" id="news-email" name="email" placeholder="me@gmail.com" required autocomplete="email" aria-label="Email address">
-      <button type="submit">Subscribe</button>
-    </form>
-    <p class="news-foot">Free on Substack &middot; No spam, unsubscribe anytime.</p>
-  </section>
-
   <section class="cta" data-screen-label="CTA">
     <h2>Tell me where the work is <em>getting stuck.</em></h2>
     <a href="index.html#contact">Start a conversation</a>
@@ -550,20 +539,6 @@ footer {
   </footer>
 
 </div>
-
-<script>
-  (function () {
-    var nf = document.getElementById("news-form");
-    if (!nf) return;
-    nf.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var email = document.getElementById("news-email").value.trim();
-      var base = "https://kkinouye.substack.com/subscribe";
-      var url = email ? base + "?email=" + encodeURIComponent(email) : base;
-      window.open(url, "_blank", "noopener");
-    });
-  })();
-</script>
 
 </body>
 </html>
